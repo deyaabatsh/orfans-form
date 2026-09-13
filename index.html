@@ -1,0 +1,1496 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>استمارة تسجيل الأيتام</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #1a4b7a;
+    --primary-light: #e8f0f9;
+    --primary-mid: #2d6ba8;
+    --accent: #c8a96e;
+    --accent-light: #fdf6ec;
+    --surface: #ffffff;
+    --surface2: #f7f8fa;
+    --surface3: #eef1f5;
+    --border: #dde2ea;
+    --border-focus: #2d6ba8;
+    --text: #1a2332;
+    --text-secondary: #5a6a7e;
+    --text-muted: #8a97a8;
+    --danger: #d94040;
+    --danger-light: #fdf0f0;
+    --success: #2a7a5a;
+    --success-light: #edf7f2;
+    --warning: #b45309;
+    --warning-light: #fffbeb;
+    --radius: 10px;
+    --radius-sm: 6px;
+    --shadow: 0 2px 12px rgba(26,75,122,0.08);
+    --shadow-lg: 0 8px 32px rgba(26,75,122,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    background: linear-gradient(160deg, #e8f0f9 0%, #f0f4f8 40%, #fdf6ec 100%);
+    min-height: 100vh;
+    color: var(--text);
+    direction: rtl;
+  }
+
+  .page-bg {
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 600px 400px at 10% 20%, rgba(200,169,110,0.06) 0%, transparent 70%),
+      radial-gradient(ellipse 500px 600px at 90% 80%, rgba(26,75,122,0.06) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2rem 1.25rem 4rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  .form-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    padding: 2.5rem 2rem;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: var(--shadow-lg);
+    border-top: 4px solid var(--primary);
+    position: relative;
+    overflow: hidden;
+  }
+  .form-header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, var(--primary-light) 0%, transparent 60%);
+    opacity: 0.4;
+  }
+  .form-header .logo {
+    width: 56px; height: 56px;
+    background: var(--primary);
+    border-radius: 14px;
+    margin: 0 auto 1rem;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    box-shadow: 0 4px 16px rgba(26,75,122,0.25);
+  }
+  .form-header .logo svg { width: 28px; height: 28px; fill: white; }
+  .form-header h1 {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 6px;
+    position: relative;
+  }
+  .form-header p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    position: relative;
+  }
+  .required-note {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 10px;
+    position: relative;
+  }
+  .required-note span { color: var(--danger); font-size: 14px; }
+
+  /* Progress */
+  .progress-bar {
+    background: var(--surface);
+    border-radius: 50px;
+    height: 6px;
+    margin-bottom: 2rem;
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.08);
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+    border-radius: 50px;
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+
+  /* ===== شاشة التحقق من الهوية ===== */
+  #id-check-screen {
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border);
+    padding: 2.5rem 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  .id-check-icon {
+    width: 70px; height: 70px;
+    background: var(--primary-light);
+    border-radius: 50%;
+    margin: 0 auto 1.25rem;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px;
+    border: 2px solid #c5d9ee;
+  }
+  #id-check-screen h2 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 8px;
+  }
+  #id-check-screen p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+  }
+  .id-check-row {
+    display: flex;
+    gap: 10px;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  .id-check-row input {
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    font-size: 15px;
+    padding: 11px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text);
+    flex: 1;
+    direction: ltr;
+    text-align: center;
+    letter-spacing: 2px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .id-check-row input:focus {
+    outline: none;
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px rgba(45,107,168,0.12);
+  }
+  .id-check-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 11px 22px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    white-space: nowrap;
+    transition: background 0.15s, transform 0.1s;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .id-check-btn:hover { background: var(--primary-mid); transform: translateY(-1px); }
+  .id-check-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  /* نتائج التحقق */
+  .check-result {
+    margin-top: 1.25rem;
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 500;
+    display: none;
+    align-items: flex-start;
+    gap: 10px;
+    text-align: right;
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  .check-result.visible { display: flex; }
+  .check-result.result-error {
+    background: var(--danger-light);
+    border: 1px solid #f5c0c0;
+    color: var(--danger);
+  }
+  .check-result.result-warning {
+    background: var(--warning-light);
+    border: 1px solid #fcd34d;
+    color: var(--warning);
+  }
+  .check-result.result-ok {
+    background: var(--success-light);
+    border: 1px solid #b8e8d5;
+    color: var(--success);
+  }
+  .check-result .result-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .check-result .result-text { flex: 1; line-height: 1.6; }
+  .check-result .result-name {
+    font-size: 12px;
+    font-weight: 400;
+    opacity: 0.85;
+    margin-top: 3px;
+  }
+
+  /* شاشة "مسجل مسبقاً" الكاملة */
+  #duplicate-screen {
+    display: none;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: var(--shadow-lg);
+    border-top: 4px solid var(--warning);
+    padding: 3rem 2rem;
+    text-align: center;
+    animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  #duplicate-screen.visible { display: block; }
+  .dup-icon {
+    width: 80px; height: 80px;
+    background: var(--warning-light);
+    border: 3px solid #fcd34d;
+    border-radius: 50%;
+    margin: 0 auto 1.5rem;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 36px;
+  }
+  .dup-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--warning);
+    margin-bottom: 10px;
+  }
+  .dup-subtitle {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    line-height: 1.7;
+  }
+  .dup-info-box {
+    background: var(--warning-light);
+    border: 1px solid #fcd34d;
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    margin: 0 auto 1.75rem;
+    max-width: 420px;
+    font-size: 14px;
+    color: var(--warning);
+    line-height: 1.8;
+    text-align: right;
+  }
+  .dup-info-box strong { display: block; font-size: 13px; color: var(--text-muted); font-weight: 400; margin-bottom: 6px; }
+  .dup-back-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 12px 40px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    box-shadow: 0 4px 16px rgba(26,75,122,0.25);
+    transition: background 0.15s, transform 0.1s;
+  }
+  .dup-back-btn:hover { background: var(--primary-mid); transform: translateY(-1px); }
+
+  /* Section */
+  .section {
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    transition: box-shadow 0.2s;
+  }
+  .section:hover { box-shadow: var(--shadow-lg); }
+
+  .section-header {
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+  }
+  .section-icon {
+    width: 34px; height: 34px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .ic-blue { background: var(--primary-light); }
+  .ic-teal { background: #e0f5ee; }
+  .ic-purple { background: #eeecfd; }
+  .ic-amber { background: var(--accent-light); }
+  .ic-coral { background: #fdecea; }
+  .ic-green { background: #eaf4e4; }
+  .ic-gray { background: var(--surface3); }
+
+  .section-title-text {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--primary);
+  }
+  .section-body { padding: 1.25rem; }
+
+  /* Grid */
+  .grid { display: grid; gap: 14px; }
+  .g2 { grid-template-columns: 1fr 1fr; }
+  .g3 { grid-template-columns: 1fr 1fr 1fr; }
+  .g1 { grid-template-columns: 1fr; }
+  .col-full { grid-column: 1 / -1; }
+
+  /* Field */
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+  .field .hint {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: -3px;
+  }
+  .req { color: var(--danger); margin-right: 2px; }
+
+  input[type=text], input[type=tel], input[type=number], input[type=date],
+  select, textarea {
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    font-size: 14px;
+    padding: 9px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text);
+    width: 100%;
+    direction: rtl;
+    transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+    -webkit-appearance: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px rgba(45,107,168,0.12);
+    background: var(--primary-light);
+  }
+  input:hover, select:hover, textarea:hover { border-color: #b0bdd0; }
+  textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+  select[disabled], input[disabled] { opacity: 0.7; cursor: not-allowed; background: var(--surface3); }
+  input[type=date]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: pointer; }
+  ::placeholder { color: var(--text-muted); }
+
+  input.input-error, select.input-error, textarea.input-error {
+    border-color: var(--danger) !important;
+    background: var(--danger-light) !important;
+  }
+  .field-error-msg {
+    font-size: 11px;
+    color: var(--danger);
+    margin-top: 2px;
+    display: none;
+  }
+  .field-error-msg.visible { display: block; }
+
+  /* Radio */
+  .radio-row {
+    display: flex;
+    gap: 16px;
+    padding: 8px 0;
+    flex-wrap: wrap;
+  }
+  .radio-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text);
+  }
+  .radio-item input[type=radio] {
+    width: 17px; height: 17px;
+    accent-color: var(--primary);
+    cursor: pointer;
+    margin: 0;
+    flex-shrink: 0;
+  }
+
+  /* Upload */
+  .upload-wrap {
+    position: relative;
+    border: 2px dashed var(--border);
+    border-radius: var(--radius-sm);
+    padding: 18px 12px;
+    text-align: center;
+    background: var(--surface2);
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    overflow: hidden;
+  }
+  .upload-wrap:hover { border-color: var(--primary-mid); background: var(--primary-light); }
+  .upload-wrap.has-file { border-color: var(--success); background: var(--success-light); }
+  .upload-wrap input[type=file] {
+    position: absolute; inset: 0; opacity: 0; cursor: pointer;
+    width: 100%; height: 100%; border: none; background: none; box-shadow: none; padding: 0;
+  }
+  .upload-icon { font-size: 24px; margin-bottom: 5px; display: block; }
+  .upload-text { font-size: 12px; color: var(--text-secondary); }
+  .upload-hint { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+  .file-preview {
+    font-size: 12px; color: var(--success); font-weight: 500;
+    margin-top: 4px; display: none; word-break: break-all;
+  }
+
+  /* Submit */
+  .submit-area {
+    text-align: center; margin-top: 2rem; padding: 2rem;
+    background: var(--surface); border-radius: var(--radius);
+    box-shadow: var(--shadow); border: 1px solid var(--border);
+  }
+  .submit-btn {
+    background: var(--primary); color: white; border: none;
+    border-radius: var(--radius-sm); padding: 13px 56px;
+    font-size: 16px; font-weight: 600; cursor: pointer;
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    box-shadow: 0 4px 16px rgba(26,75,122,0.25);
+    transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+    letter-spacing: 0.3px;
+  }
+  .submit-btn:hover { background: var(--primary-mid); box-shadow: 0 6px 24px rgba(26,75,122,0.3); transform: translateY(-1px); }
+  .submit-btn:active { transform: translateY(0); }
+  .submit-btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+  .submit-note { font-size: 12px; color: var(--text-muted); margin-top: 10px; }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 2rem; left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--primary); color: white;
+    padding: 12px 24px; border-radius: 50px;
+    font-size: 14px; font-weight: 500;
+    box-shadow: var(--shadow-lg); transition: transform 0.3s ease;
+    z-index: 1000; white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast.toast-error { background: var(--danger); }
+
+  /* Success Screen */
+  #success-screen {
+    display: none; position: fixed; inset: 0;
+    background: linear-gradient(160deg, #e8f0f9 0%, #f0f4f8 40%, #fdf6ec 100%);
+    z-index: 500; align-items: center; justify-content: center;
+    padding: 2rem; direction: rtl;
+  }
+  #success-screen.visible { display: flex; }
+  .success-card {
+    background: var(--surface); border-radius: 20px;
+    box-shadow: var(--shadow-lg); padding: 3rem 2.5rem;
+    text-align: center; max-width: 480px; width: 100%;
+    border-top: 5px solid var(--success);
+    animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.85) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  .success-icon-wrap {
+    width: 80px; height: 80px; background: var(--success-light);
+    border-radius: 50%; margin: 0 auto 1.5rem;
+    display: flex; align-items: center; justify-content: center;
+    border: 3px solid #b8e8d5;
+    animation: pulseSuccess 2s ease infinite;
+  }
+  @keyframes pulseSuccess {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(42,122,90,0.2); }
+    50% { box-shadow: 0 0 0 10px rgba(42,122,90,0); }
+  }
+  .success-checkmark { font-size: 36px; }
+  .success-title { font-size: 22px; font-weight: 700; color: var(--success); margin-bottom: 10px; }
+  .success-subtitle { font-size: 15px; color: var(--text-secondary); margin-bottom: 8px; line-height: 1.7; }
+  .success-note {
+    font-size: 13px; color: var(--text-muted); margin-bottom: 2rem;
+    padding: 12px 16px; background: var(--surface2);
+    border-radius: var(--radius-sm); border-right: 3px solid var(--accent);
+  }
+  .new-form-btn {
+    background: var(--primary); color: white; border: none;
+    border-radius: var(--radius-sm); padding: 13px 40px;
+    font-size: 15px; font-weight: 600; cursor: pointer;
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    box-shadow: 0 4px 16px rgba(26,75,122,0.25);
+    transition: background 0.15s, transform 0.1s; width: 100%;
+  }
+  .new-form-btn:hover { background: var(--primary-mid); transform: translateY(-1px); }
+
+  /* الحقل المعبأ مسبقاً (من شاشة التحقق) */
+  input.prefilled {
+    background: var(--primary-light) !important;
+    border-color: var(--primary-mid) !important;
+    color: var(--primary) !important;
+    font-weight: 500;
+  }
+
+  @media (max-width: 600px) {
+    .g2, .g3 { grid-template-columns: 1fr; }
+    .container { padding: 1rem 0.75rem 3rem; }
+    .form-header { padding: 1.75rem 1.25rem; }
+    .submit-btn { padding: 13px 36px; font-size: 15px; }
+    .success-card { padding: 2rem 1.5rem; }
+    .id-check-row { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-bg"></div>
+
+<!-- شاشة النجاح -->
+<div id="success-screen">
+  <div class="success-card">
+    <div class="success-icon-wrap">
+      <span class="success-checkmark">✅</span>
+    </div>
+    <div class="success-title">تم إرسال الاستمارة بنجاح!</div>
+    <div class="success-subtitle">شكراً لك، تم استلام بيانات الاستمارة بنجاح وسيتم مراجعتها من قِبل الفريق المختص.</div>
+    <div class="success-note">📋 سيتم التواصل معك في أقرب وقت ممكن بعد مراجعة الطلب.</div>
+    <button class="new-form-btn" onclick="resetForm()">📝 إرسال استمارة جديدة</button>
+  </div>
+</div>
+
+<div class="container" id="form-container">
+
+  <!-- Header -->
+  <div class="form-header">
+    <div class="logo">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+    </div>
+    <h1>استمارة تسجيل الأيتام</h1>
+    <p>يرجى تعبئة جميع الحقول بدقة لضمان معالجة الطلب بشكل صحيح</p>
+    <div class="required-note"><span>*</span> الحقول المطلوبة إلزامية</div>
+  </div>
+
+  <!-- ===== شاشة التحقق من هوية اليتيم ===== -->
+  <div id="id-check-screen">
+    <div class="id-check-icon">🪪</div>
+    <h2>التحقق من تسجيل اليتيم</h2>
+    <p>أدخل رقم هوية اليتيم/ة للتحقق من عدم وجوده ضمن القائمة المسجلة مسبقاً</p>
+    <div class="id-check-row">
+      <input
+        type="text"
+        id="orphanIdCheck"
+        placeholder="رقم الهوية (9 أرقام)"
+        maxlength="9"
+        inputmode="numeric"
+        onkeyup="onIdCheckKey(event)"
+      >
+      <button class="id-check-btn" id="checkBtn" onclick="checkOrphanId()">
+        <span id="checkBtnIcon">🔍</span>
+        <span id="checkBtnText">تحقق</span>
+      </button>
+    </div>
+    <div class="check-result" id="checkResult">
+      <span class="result-icon" id="checkResultIcon"></span>
+      <div class="result-text">
+        <div id="checkResultMsg"></div>
+        <div class="result-name" id="checkResultSub"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- شاشة "مسجل مسبقاً" -->
+  <div id="duplicate-screen">
+    <div class="dup-icon">⚠️</div>
+    <div class="dup-title">هذا اليتيم مسجل مسبقاً!</div>
+    <div class="dup-subtitle">تم العثور على هوية اليتيم/ة ضمن قاعدة البيانات المسجلة.<br>لا يمكن إضافة نفس اليتيم مرتين.</div>
+    <div class="dup-info-box">
+      <strong>بيانات التسجيل السابق:</strong>
+      <span id="dupOrphanName"></span>
+    </div>
+    <button class="dup-back-btn" onclick="resetCheckScreen()">🔄 البحث عن هوية أخرى</button>
+  </div>
+
+  <!-- الفورم الرئيسي (مخفي حتى يتم التحقق) -->
+  <div id="main-form" style="display:none">
+
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+    <!-- قسم 1: اليتيم -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon ic-purple">🧒</div>
+        <span class="section-title-text">بيانات اليتيم / اليتيمة</span>
+      </div>
+      <div class="section-body">
+        <div class="grid g2">
+          <div class="field">
+            <label>اسم اليتيم رباعي <span class="req">*</span></label>
+            <input type="text" id="orphanName" placeholder="الاسم الرباعي كاملاً" required>
+          </div>
+          <div class="field">
+            <label>هوية اليتيم <span class="req">*</span></label>
+            <input type="text" id="orphanIdInForm" class="id-input prefilled" placeholder="9 أرقام" maxlength="9" required inputmode="numeric" readonly>
+            <span class="field-error-msg">يجب أن يتكون رقم الهوية من 9 أرقام فقط</span>
+          </div>
+          <div class="field">
+            <label>تاريخ ميلاد اليتيم <span class="req">*</span></label>
+            <input type="date" id="orphanBirthDate" required onchange="updateOrphanAge()">
+          </div>
+          <div class="field">
+            <label>العمر</label>
+            <input type="text" id="orphanAge" placeholder="يُحسب تلقائياً" readonly>
+          </div>
+          <div class="field">
+            <label>الجنس <span class="req">*</span></label>
+            <select id="orphanGender" required>
+              <option value="">اختر</option>
+              <option>ذكر</option><option>أنثى</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- قسم 2: الأب المتوفى -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon ic-blue">👤</div>
+        <span class="section-title-text">بيانات الأب المتوفى</span>
+      </div>
+      <div class="section-body">
+        <div class="grid g2">
+          <div class="field">
+            <label>رقم هوية الأب المتوفي <span class="req">*</span></label>
+            <input type="text" id="fatherId" class="id-input" placeholder="9 أرقام" maxlength="9" required inputmode="numeric">
+            <span class="field-error-msg">يجب أن يتكون رقم الهوية من 9 أرقام فقط</span>
+          </div>
+          <div class="field">
+            <label>اسم الأب المتوفي رباعي <span class="req">*</span></label>
+            <input type="text" id="fatherName" placeholder="الاسم الرباعي كاملاً" required>
+          </div>
+          <div class="field">
+            <label>تاريخ وفاة الأب <span class="req">*</span></label>
+            <input type="date" id="fatherDeathDate" required>
+          </div>
+          <div class="field">
+            <label>شهيد (نعم / لا) <span class="req">*</span></label>
+            <select id="fatherMartyr" required>
+              <option value="">اختر</option>
+              <option>نعم</option><option>لا</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>يعمل / لا يعمل <span class="req">*</span></label>
+            <select id="fatherEmployed" required>
+              <option value="">اختر</option>
+              <option>يعمل</option><option>لا يعمل</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- قسم 3: الوالدة -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon ic-coral">👩</div>
+        <span class="section-title-text">بيانات الوالدة</span>
+      </div>
+      <div class="section-body">
+        <div class="grid g2">
+          <div class="field">
+            <label>رقم هوية الأم <span class="req">*</span></label>
+            <input type="text" id="motherId" class="id-input" placeholder="9 أرقام" maxlength="9" required inputmode="numeric">
+            <span class="field-error-msg">يجب أن يتكون رقم الهوية من 9 أرقام فقط</span>
+          </div>
+          <div class="field">
+            <label>اسم الأم رباعي <span class="req">*</span></label>
+            <input type="text" id="motherName" placeholder="الاسم الرباعي كاملاً" required>
+          </div>
+        </div>
+
+        <div class="field" style="margin:14px 0">
+          <label>هل الأم شهيدة؟ <span class="req">*</span></label>
+          <div class="radio-row">
+            <label class="radio-item">
+              <input type="radio" name="isMotherMartyr" value="نعم" onchange="toggleMotherDeathDate(true)">
+              نعم
+            </label>
+            <label class="radio-item">
+              <input type="radio" name="isMotherMartyr" value="لا" onchange="toggleMotherDeathDate(false)">
+              لا
+            </label>
+          </div>
+        </div>
+
+        <div class="grid g2">
+          <div class="field" id="motherDeathDateField" style="display:none">
+            <label>تاريخ وفاة الأم (إن كانت شهيدة) <span class="req">*</span></label>
+            <input type="date" id="motherDeathDate">
+          </div>
+          <div class="field">
+            <label>الحالة الاجتماعية للأم <span class="req">*</span></label>
+            <select id="motherStatus" required>
+              <option value="">اختر</option>
+              <option>أرملة</option><option>متزوجة</option><option>مطلقة</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- قسم 4: الإعاقة وعدد أفراد الأسرة -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon ic-amber">♿</div>
+        <span class="section-title-text">الإعاقة وعدد أفراد الأسرة</span>
+      </div>
+      <div class="section-body">
+        <div class="field" style="margin-bottom:14px">
+          <label>يوجد إعاقة؟ <span class="req">*</span></label>
+          <div class="radio-row">
+            <label class="radio-item">
+              <input type="radio" name="hasDisability" value="نعم" onchange="toggleDisabilityType(true)">
+              نعم
+            </label>
+            <label class="radio-item">
+              <input type="radio" name="hasDisability" value="لا" onchange="toggleDisabilityType(false)">
+              لا
+            </label>
+          </div>
+        </div>
+        <div class="grid g2">
+          <div class="field" id="disabilityTypeField" style="display:none">
+            <label>نوع الإعاقة <span class="req">*</span></label>
+            <input type="text" id="disabilityType" placeholder="صف نوع الإعاقة">
+          </div>
+          <div class="field">
+            <label>عدد أفراد العائلة <span class="req">*</span></label>
+            <input type="number" id="familyMembersCount" min="1" placeholder="العدد الكلي" required>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- قسم 5: الوكيل -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon ic-teal">🛡️</div>
+        <span class="section-title-text">بيانات الوكيل / الوكيلة</span>
+      </div>
+      <div class="section-body">
+        <div class="grid g2">
+          <div class="field">
+            <label>رقم هوية الوكيل/ة <span class="req">*</span></label>
+            <input type="text" id="guardianId" class="id-input" placeholder="9 أرقام" maxlength="9" required inputmode="numeric">
+            <span class="field-error-msg">يجب أن يتكون رقم الهوية من 9 أرقام فقط</span>
+          </div>
+          <div class="field">
+            <label>اسم الوكيل/ة رباعي <span class="req">*</span></label>
+            <input type="text" id="guardianName" placeholder="الاسم الرباعي كاملاً" required>
+          </div>
+          <div class="field">
+            <label>صلة القرابة <span class="req">*</span></label>
+            <select id="guardianRelation" required>
+              <option value="">اختر العلاقة</option>
+              <option>أم</option><option>جد</option><option>جدة</option>
+              <option>عم</option><option>عمة</option><option>خال</option>
+              <option>خالة</option><option>أخ</option><option>أخت</option><option>أخرى</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>رقم الجوال الأساسي <span class="req">*</span></label>
+            <input type="text" id="guardianPhone1" class="phone-input" placeholder="10 أرقام" maxlength="10" required inputmode="numeric">
+            <span class="field-error-msg">يجب أن يتكون رقم الجوال من 10 أرقام فقط</span>
+          </div>
+          <div class="field">
+            <label>رقم الجوال البديل <span class="req">*</span></label>
+            <input type="text" id="guardianPhone2" class="phone-input" placeholder="10 أرقام" maxlength="10" required inputmode="numeric">
+            <span class="field-error-msg">يجب أن يتكون رقم الجوال من 10 أرقام فقط</span>
+          </div>
+          <div class="field col-full">
+            <p id="phone-match-error" class="field-error-msg"></p>
+          </div>
+          <div class="field col-full">
+            <label>نوع الإعالة التي يملكها الوكيل <span class="req">*</span></label>
+            <input type="text" id="guardianSupportType" placeholder="مثال: لا يوجد، مساعدة أونروا، ضمان اجتماعي..." required>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- قسم 6: السكن -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon ic-green">🏠</div>
+        <span class="section-title-text">بيانات السكن</span>
+      </div>
+      <div class="section-body">
+        <div class="grid g2">
+          <div class="field">
+            <label>المحافظة <span class="req">*</span></label>
+            <select id="governorateSelect" required onchange="updateCities()">
+              <option value="">اختر المحافظة</option>
+              <option value="شمال غزة">شمال غزة</option>
+              <option value="غزة">غزة</option>
+              <option value="الوسطى">الوسطى</option>
+              <option value="خانيونس">خانيونس</option>
+              <option value="رفح">رفح</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>المدينة <span class="req">*</span></label>
+            <select id="citySelect" required disabled>
+              <option value="">اختر المحافظة أولاً</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- قسم 7: معلومات الاستلام -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon ic-teal">💳</div>
+        <span class="section-title-text">معلومات الاستلام (محفظة بال باي)</span>
+      </div>
+      <div class="section-body">
+        <div class="grid g2">
+          <div class="field">
+            <label>رقم محفظة بال باي <span class="req">*</span></label>
+            <input type="text" id="walletNumber" class="phone-input" placeholder="10 أرقام" maxlength="10" required inputmode="numeric">
+            <span class="hint">يجب أن يكون رقم الجوال المرتبط بمحفظة بال باي</span>
+            <span class="field-error-msg">يجب أن يتكون الرقم من 10 أرقام فقط</span>
+          </div>
+          <div class="field">
+            <label>اسم صاحب المحفظة رباعي <span class="req">*</span></label>
+            <input type="text" id="walletOwnerName" placeholder="الاسم الرباعي كاملاً" required>
+          </div>
+          <div class="field">
+            <label>رقم هوية صاحب المحفظة <span class="req">*</span></label>
+            <input type="text" id="walletOwnerId" class="id-input" placeholder="9 أرقام" maxlength="9" required inputmode="numeric">
+            <span class="field-error-msg">يجب أن يتكون رقم الهوية من 9 أرقام فقط</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- قسم 8: المرفقات -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon ic-blue">📎</div>
+        <span class="section-title-text">المستندات والصور المطلوبة</span>
+      </div>
+      <div class="section-body">
+        <div class="grid g2">
+          <div class="field">
+            <label>حجة الوصاية <span class="req">*</span></label>
+            <div class="upload-wrap" id="uw1">
+              <input type="file" accept="image/*,application/pdf" onchange="handleFile(this,'uw1','fn1')">
+              <span class="upload-icon">📄</span>
+              <div class="upload-text">اضغط لرفع حجة الوصاية</div>
+              <div class="upload-hint">JPG, PNG, PDF — حد أقصى 5MB</div>
+              <div class="file-preview" id="fn1"></div>
+            </div>
+          </div>
+          <div class="field">
+            <label>شهادة ميلاد الطفل <span class="req">*</span></label>
+            <div class="upload-wrap" id="uw2">
+              <input type="file" accept="image/*,application/pdf" onchange="handleFile(this,'uw2','fn2')">
+              <span class="upload-icon">📄</span>
+              <div class="upload-text">اضغط لرفع الشهادة</div>
+              <div class="upload-hint">JPG, PNG, PDF — حد أقصى 5MB</div>
+              <div class="file-preview" id="fn2"></div>
+            </div>
+          </div>
+          <div class="field">
+            <label>شهادة وفاة الأب <span class="req">*</span></label>
+            <div class="upload-wrap" id="uw3">
+              <input type="file" accept="image/*,application/pdf" onchange="handleFile(this,'uw3','fn3')">
+              <span class="upload-icon">📄</span>
+              <div class="upload-text">اضغط لرفع الشهادة</div>
+              <div class="upload-hint">JPG, PNG, PDF — حد أقصى 5MB</div>
+              <div class="file-preview" id="fn3"></div>
+            </div>
+          </div>
+          <div class="field">
+            <label>صورة هوية الوكيل <span class="req">*</span></label>
+            <div class="upload-wrap" id="uw4">
+              <input type="file" accept="image/*" onchange="handleFile(this,'uw4','fn4')">
+              <span class="upload-icon">🪪</span>
+              <div class="upload-text">اضغط لرفع صورة الهوية</div>
+              <div class="upload-hint">JPG, PNG — حد أقصى 5MB</div>
+              <div class="file-preview" id="fn4"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <div class="submit-area">
+      <button type="button" class="submit-btn" id="submitBtn" onclick="submitForm()">إرسال الاستمارة</button>
+      <p class="submit-note">بالضغط على إرسال، تؤكد صحة المعلومات المدخلة</p>
+    </div>
+
+  </div><!-- /main-form -->
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ================================================================
+// ملاحظة: التخزين لم يُحدَّد بعد. النموذج جاهز بالكامل من ناحية
+// الواجهة والتحقق من الحقول؛ عند تحديد مكان التخزين (Google Sheet
+// أو غيره) يكفي تعبئة SCRIPT_URL و SHEET_CSV_URL أدناه لتفعيل
+// التحقق من تكرار هوية اليتيم وإرسال البيانات فعلياً.
+// ================================================================
+var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyv-r_8lS3AxKQ9njWNQdwwmd1L-npUHZ1MJqYiORhAo4HsJorPvNu0wSyAwa0DXBrY/exec";       // رابط Google Apps Script (فحص + إرسال) — لم يُحدَّد بعد
+var SHEET_CSV_URL = "";    // رابط الشيت المنشور كـ CSV (اختياري، لم يُحدَّد بعد)
+
+// ترتيب الأعمدة (32 عموداً) كما سيُخزَّن لاحقاً — مطابق لأسماء الحقول في ملف الإكسل
+// (بعد حذف الأعمدة المكررة/غير المطلوبة: هوية الأب المكررة، الجنس1، الجنس2، الحالة الاجتماعية للأب)
+var FIELD_COLUMNS = [
+  'رقم هوية الاب المتوفي', 'هوية اليتيم', 'اسم اليتيم رباعي', 'تاريخ ميلاد اليتيم', 'العمر', 'الجنس',
+  'اسم الاب المتوفي رباعي', 'تاريخ وفاة الاب', 'شهيد(نعم / لا)', 'يعمل / لا يعمل',
+  'رقم هوية الام', 'اسم الام رباعي', 'ان كانت الام شهيد ادخل تاريخ الوفاة', 'حالة الام',
+  'يوجد إعاقة', 'نوع الاعاقة', 'عدد افراد العائلة',
+  'رقم هوية الوكيل رباعي', 'اسم الوكيل رباعي', 'صلة القرابة', 'رقم الجوال الاساسي', 'رقم الجوال البديل', 'نوع الاعالة التى يملكها الوكيل',
+  'المحافظة', 'المدينة',
+  'شرط رقم محفظة بال باي', 'اسم صاحب المحفظة رباعي', 'رقم الهوية صاحب المحفظة',
+  'حجة الوصاية', 'شهادة الميلاد', 'شهادة الوفاة', 'هوية الوكيل (صورة)'
+];
+var ORPHAN_ID_COLUMN_INDEX = 1; // "هوية اليتيم" — العمود الثاني (0-indexed)
+
+var fileData = { guardianshipDeed: null, birthCert: null, deathCert: null, guardianId_img: null };
+var checkedOrphanId = '';
+
+// ===== التحقق من هوية اليتيم =====
+function onIdCheckKey(event) {
+  var input = document.getElementById('orphanIdCheck');
+  input.value = input.value.replace(/\D/g, '').slice(0, 9);
+  var result = document.getElementById('checkResult');
+  result.className = 'check-result';
+  if (event.key === 'Enter' && input.value.length === 9) {
+    checkOrphanId();
+  }
+}
+
+function checkOrphanId() {
+  var idVal = document.getElementById('orphanIdCheck').value.trim();
+
+  if (idVal.length !== 9) {
+    showCheckResult('error', '⚠️', 'يرجى إدخال رقم هوية مكوّن من 9 أرقام بالضبط.', '');
+    return;
+  }
+
+  if (!SCRIPT_URL) {
+    // لم يُحدَّد مكان التخزين بعد — نتيح المتابعة مباشرة دون تحقق تكرار حي
+    showCheckResult('warning', 'ℹ️', 'التحقق التلقائي من التكرار غير مُفعّل حالياً (لم يُربط مصدر بيانات بعد). يمكنك المتابعة.', '');
+    setTimeout(function() { showMainForm(idVal); }, 1000);
+    return;
+  }
+
+  var btn = document.getElementById('checkBtn');
+  var btnIcon = document.getElementById('checkBtnIcon');
+  var btnText = document.getElementById('checkBtnText');
+  btn.disabled = true;
+  btnIcon.textContent = '⏳';
+  btnText.textContent = 'جاري التحقق...';
+  showCheckResult('', '', '', '');
+
+  fetch(SCRIPT_URL + '?action=check&id=' + idVal)
+    .then(function(res) { return res.json(); })
+    .then(function(result) {
+      btn.disabled = false;
+      btnIcon.textContent = '🔍';
+      btnText.textContent = 'تحقق';
+
+      if (result.found) {
+        showDuplicateScreen(idVal, result.name || '');
+      } else {
+        showCheckResult('ok', '✅', 'هوية اليتيم غير مسجلة. يمكنك المتابعة.', '');
+        setTimeout(function() { showMainForm(idVal); }, 1200);
+      }
+    })
+    .catch(function(err) {
+      btn.disabled = false;
+      btnIcon.textContent = '🔍';
+      btnText.textContent = 'تحقق';
+      console.error('Error checking orphan id:', err);
+      showCheckResult('warning', '⚠️',
+        'تعذّر الاتصال بقاعدة البيانات للتحقق. يمكنك المتابعة، وسيتم التحقق عند الإرسال.',
+        'تأكد من اتصالك بالإنترنت أو تواصل مع المسؤول.'
+      );
+      setTimeout(function() { showMainForm(idVal); }, 2000);
+    });
+}
+
+function showCheckResult(type, icon, msg, sub) {
+  var el = document.getElementById('checkResult');
+  var iconEl = document.getElementById('checkResultIcon');
+  var msgEl = document.getElementById('checkResultMsg');
+  var subEl = document.getElementById('checkResultSub');
+  if (!type) { el.className = 'check-result'; return; }
+  iconEl.textContent = icon;
+  msgEl.textContent = msg;
+  subEl.textContent = sub;
+  el.className = 'check-result visible result-' + type;
+}
+
+function showDuplicateScreen(id, orphanName) {
+  document.getElementById('id-check-screen').style.display = 'none';
+  var dupScreen = document.getElementById('duplicate-screen');
+  dupScreen.classList.add('visible');
+
+  var displayText = 'رقم الهوية: ' + id;
+  if (orphanName) displayText += ' — ' + orphanName;
+  document.getElementById('dupOrphanName').textContent = displayText;
+}
+
+function resetCheckScreen() {
+  document.getElementById('duplicate-screen').classList.remove('visible');
+  document.getElementById('id-check-screen').style.display = '';
+  document.getElementById('orphanIdCheck').value = '';
+  document.getElementById('checkResult').className = 'check-result';
+  var btn = document.getElementById('checkBtn');
+  btn.disabled = false;
+  document.getElementById('checkBtnIcon').textContent = '🔍';
+  document.getElementById('checkBtnText').textContent = 'تحقق';
+}
+
+function showMainForm(orphanId) {
+  checkedOrphanId = orphanId;
+  var idField = document.getElementById('orphanIdInForm');
+  if (idField) idField.value = orphanId;
+  document.getElementById('id-check-screen').style.display = 'none';
+  document.getElementById('duplicate-screen').classList.remove('visible');
+  document.getElementById('main-form').style.display = 'block';
+  document.getElementById('main-form').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  setupNumericInputs();
+}
+
+// ===== التحقق من رقم الهوية (9) والجوال (10) =====
+function getMaxLen(input) {
+  return input.classList.contains('phone-input') ? 10 : 9;
+}
+
+function setupNumericInputs() {
+  document.querySelectorAll('.id-input, .phone-input').forEach(function(input) {
+    if (input.dataset.setupDone) return;
+    input.dataset.setupDone = '1';
+    var maxLen = getMaxLen(input);
+    input.addEventListener('keypress', function(e) {
+      if (!/[0-9]/.test(e.key)) e.preventDefault();
+    });
+    input.addEventListener('paste', function(e) {
+      e.preventDefault();
+      var pasted = (e.clipboardData || window.clipboardData).getData('text');
+      var digitsOnly = pasted.replace(/\D/g, '').slice(0, maxLen);
+      var start = this.selectionStart, end = this.selectionEnd;
+      var newVal = (this.value.slice(0, start) + digitsOnly + this.value.slice(end)).slice(0, maxLen);
+      this.value = newVal;
+      updateProgress();
+    });
+    input.addEventListener('input', function() {
+      var ml = getMaxLen(this);
+      var clean = this.value.replace(/\D/g, '').slice(0, ml);
+      if (this.value !== clean) this.value = clean;
+      validateNumericField(this);
+      updateProgress();
+    });
+    input.addEventListener('blur', function() { validateNumericField(this); });
+    input.addEventListener('focus', function() {
+      this.classList.remove('input-error');
+      var errMsg = this.parentElement.querySelector('.field-error-msg');
+      if (errMsg) errMsg.classList.remove('visible');
+    });
+  });
+}
+
+function validateNumericField(input) {
+  if (input.id === 'orphanIdInForm') return true; // معبأ مسبقاً
+  var required = getMaxLen(input);
+  var errMsg = input.parentElement.querySelector('.field-error-msg');
+  if (input.value.length > 0 && input.value.length < required) {
+    input.classList.add('input-error');
+    if (errMsg) errMsg.classList.add('visible');
+    return false;
+  } else {
+    input.classList.remove('input-error');
+    if (errMsg) errMsg.classList.remove('visible');
+    return true;
+  }
+}
+
+function validateAllNumericFields() {
+  var allValid = true;
+  document.querySelectorAll('.id-input, .phone-input').forEach(function(input) {
+    if (input.id === 'orphanIdInForm') return; // تخطي الحقل المعبأ مسبقاً
+    if (input.offsetParent !== null) {
+      var required = getMaxLen(input);
+      if (input.value.length !== required) {
+        input.classList.add('input-error');
+        var errMsg = input.parentElement.querySelector('.field-error-msg');
+        if (errMsg) errMsg.classList.add('visible');
+        allValid = false;
+      }
+    }
+  });
+  return allValid;
+}
+
+// ===== العمر التلقائي =====
+function updateOrphanAge() {
+  var val = document.getElementById('orphanBirthDate').value;
+  var ageField = document.getElementById('orphanAge');
+  if (!val) { ageField.value = ''; return; }
+  var birth = new Date(val);
+  var today = new Date();
+  var age = today.getFullYear() - birth.getFullYear();
+  var m = today.getMonth() - birth.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
+  ageField.value = age >= 0 ? age : '';
+  updateProgress();
+}
+
+// ===== إظهار/إخفاء الحقول الشرطية =====
+function toggleMotherDeathDate(show) {
+  var field = document.getElementById('motherDeathDateField');
+  var input = document.getElementById('motherDeathDate');
+  field.style.display = show ? '' : 'none';
+  if (show) { input.setAttribute('required', ''); }
+  else { input.removeAttribute('required'); input.value = ''; }
+  updateProgress();
+}
+
+function toggleDisabilityType(show) {
+  var field = document.getElementById('disabilityTypeField');
+  var input = document.getElementById('disabilityType');
+  field.style.display = show ? '' : 'none';
+  if (show) { input.setAttribute('required', ''); }
+  else { input.removeAttribute('required'); input.value = ''; }
+  updateProgress();
+}
+
+// ===== ضغط الصور / تجهيز الملفات =====
+function handleFile(input, wrapId, nameId) {
+  var wrap = document.getElementById(wrapId);
+  var nameEl = document.getElementById(nameId);
+  if (!(input.files && input.files[0])) return;
+  var file = input.files[0];
+  if (file.size > 5 * 1024 * 1024) {
+    showToast('⚠️ حجم الملف كبير جداً — الحد الأقصى 5 ميجا', 3500, true);
+    input.value = '';
+    return;
+  }
+  var key = { uw1: 'guardianshipDeed', uw2: 'birthCert', uw3: 'deathCert', uw4: 'guardianId_img' }[wrapId];
+
+  if (file.type === 'application/pdf') {
+    // ملفات PDF تُحفظ كما هي دون ضغط (لا يمكن تحميلها كصورة)
+    var pdfReader = new FileReader();
+    pdfReader.onload = function(e) {
+      fileData[key] = e.target.result;
+      markFileReady(wrap, nameEl, file.name);
+    };
+    pdfReader.readAsDataURL(file);
+    return;
+  }
+
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var img = new Image();
+    img.onload = function() {
+      var canvas = document.createElement('canvas');
+      var ctx = canvas.getContext('2d');
+      var MAX_WIDTH = 800;
+      var scale = Math.min(1, MAX_WIDTH / img.width);
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      var compressedBase64 = canvas.toDataURL('image/jpeg', 0.6);
+      fileData[key] = compressedBase64;
+      markFileReady(wrap, nameEl, file.name);
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function markFileReady(wrap, nameEl, fileName) {
+  wrap.classList.add('has-file');
+  nameEl.style.display = 'block';
+  nameEl.textContent = '✓ تم تجهيز الملف: ' + fileName;
+  updateProgress();
+}
+
+function updateProgress() {
+  var inputs = document.querySelectorAll('#main-form input[required], #main-form select[required]');
+  var filled = 0;
+  var visibleCount = 0;
+  inputs.forEach(function(inp) {
+    if (inp.offsetParent === null) return;
+    visibleCount++;
+    if (inp.value && inp.value.trim()) filled++;
+  });
+  var pct = visibleCount ? Math.min(100, Math.round((filled / visibleCount) * 100)) : 0;
+  var fill = document.getElementById('progressFill');
+  if (fill) fill.style.width = pct + '%';
+}
+
+document.addEventListener('input', updateProgress);
+document.addEventListener('change', updateProgress);
+
+function showToast(msg, duration, isError) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (isError ? ' toast-error' : '');
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, duration || 3000);
+}
+
+// ===== جمع البيانات =====
+function collectFormData() {
+  var isMotherMartyrEl = document.querySelector('input[name=isMotherMartyr]:checked');
+  var hasDisabilityEl = document.querySelector('input[name=hasDisability]:checked');
+
+  var data = {
+    fatherId:              document.getElementById('fatherId').value,
+    orphanId:              checkedOrphanId || document.getElementById('orphanIdInForm').value,
+    orphanName:            document.getElementById('orphanName').value,
+    orphanBirthDate:       document.getElementById('orphanBirthDate').value,
+    orphanAge:             document.getElementById('orphanAge').value,
+    orphanGender:          document.getElementById('orphanGender').value,
+    fatherName:            document.getElementById('fatherName').value,
+    fatherDeathDate:       document.getElementById('fatherDeathDate').value,
+    fatherMartyr:          document.getElementById('fatherMartyr').value,
+    fatherEmployed:        document.getElementById('fatherEmployed').value,
+    motherId:              document.getElementById('motherId').value,
+    motherName:            document.getElementById('motherName').value,
+    motherDeathDate:       isMotherMartyrEl && isMotherMartyrEl.value === 'نعم' ? document.getElementById('motherDeathDate').value : '',
+    motherStatus:          document.getElementById('motherStatus').value,
+    hasDisability:         hasDisabilityEl ? hasDisabilityEl.value : '',
+    disabilityType:        hasDisabilityEl && hasDisabilityEl.value === 'نعم' ? document.getElementById('disabilityType').value : '',
+    familyMembersCount:    document.getElementById('familyMembersCount').value,
+    guardianId:            document.getElementById('guardianId').value,
+    guardianName:          document.getElementById('guardianName').value,
+    guardianRelation:      document.getElementById('guardianRelation').value,
+    guardianPhone1:        document.getElementById('guardianPhone1').value,
+    guardianPhone2:        document.getElementById('guardianPhone2').value,
+    guardianSupportType:   document.getElementById('guardianSupportType').value,
+    governorate:           document.getElementById('governorateSelect').value,
+    city:                  document.getElementById('citySelect').value,
+    walletNumber:          document.getElementById('walletNumber').value,
+    walletOwnerName:       document.getElementById('walletOwnerName').value,
+    walletOwnerId:         document.getElementById('walletOwnerId').value,
+    guardianshipDeed:      fileData.guardianshipDeed,
+    birthCert:             fileData.birthCert,
+    deathCert:             fileData.deathCert,
+    guardianId_img:        fileData.guardianId_img
+  };
+
+  // نسخة مرتبة بنفس ترتيب أعمدة ملف الإكسل (مفيدة عند ربط التخزين لاحقاً)
+  data.orderedRow = [
+    data.fatherId, data.orphanId, data.orphanName, data.orphanBirthDate, data.orphanAge, data.orphanGender,
+    data.fatherName, data.fatherDeathDate, data.fatherMartyr, data.fatherEmployed,
+    data.motherId, data.motherName, data.motherDeathDate, data.motherStatus,
+    data.hasDisability, data.disabilityType, data.familyMembersCount,
+    data.guardianId, data.guardianName, data.guardianRelation, data.guardianPhone1, data.guardianPhone2, data.guardianSupportType,
+    data.governorate, data.city,
+    data.walletNumber, data.walletOwnerName, data.walletOwnerId,
+    data.guardianshipDeed, data.birthCert, data.deathCert, data.guardianId_img
+  ];
+
+  return data;
+}
+
+// ===== إرسال الفورم =====
+function submitForm() {
+  var required = document.querySelectorAll('#main-form [required]');
+  var missing = false;
+  required.forEach(function(el) {
+    if (el.offsetParent === null) return; // تجاهل الحقول المخفية
+    if (!el.value || !el.value.trim()) {
+      el.classList.add('input-error');
+      missing = true;
+    } else {
+      el.classList.remove('input-error');
+    }
+  });
+
+  if (missing) {
+    showToast('⚠️ يرجى تعبئة جميع الحقول الإلزامية', 3000, true);
+    var firstMissing = document.querySelector('#main-form .input-error');
+    if (firstMissing) firstMissing.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  if (!validateAllNumericFields()) {
+    showToast('⚠️ الهوية 9 خانات، رقم الجوال 10 خانات — يرجى المراجعة', 3500, true);
+    var firstError = document.querySelector('.input-error');
+    if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  var phone1Input = document.getElementById('guardianPhone1');
+  var phone2Input = document.getElementById('guardianPhone2');
+  var phoneMatchErrorEl = document.getElementById('phone-match-error');
+  if (phone1Input.value === phone2Input.value && phone1Input.value.length > 0) {
+    phoneMatchErrorEl.textContent = 'رقمي الجوال لا يمكن أن يكونا متطابقين.';
+    phoneMatchErrorEl.classList.add('visible');
+    phone1Input.classList.add('input-error');
+    phone2Input.classList.add('input-error');
+    showToast('⚠️ رقمي الجوال لا يمكن أن يكونا متطابقين.', 3500, true);
+    phone1Input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  } else {
+    phoneMatchErrorEl.textContent = '';
+    phoneMatchErrorEl.classList.remove('visible');
+    phone1Input.classList.remove('input-error');
+    phone2Input.classList.remove('input-error');
+  }
+
+  if (!document.querySelector('input[name=isMotherMartyr]:checked')) {
+    showToast('⚠️ يرجى تحديد هل الأم شهيدة أم لا', 3000, true);
+    document.querySelector('input[name=isMotherMartyr]').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  if (!document.querySelector('input[name=hasDisability]:checked')) {
+    showToast('⚠️ يرجى تحديد وجود إعاقة من عدمه', 3000, true);
+    document.querySelector('input[name=hasDisability]').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  if (!fileData.guardianshipDeed || !fileData.birthCert || !fileData.deathCert || !fileData.guardianId_img) {
+    showToast('⚠️ يرجى رفع جميع المستندات المطلوبة', 3000, true);
+    return;
+  }
+
+  var btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'جاري الإرسال...';
+
+  var data = collectFormData();
+
+  if (!SCRIPT_URL) {
+    // لم يُحدَّد مكان التخزين بعد — نعرض البيانات في الـ console كي يسهل مراجعتها لاحقاً
+    console.log('بيانات الاستمارة (لم يتم حفظها بعد — لا يوجد رابط تخزين مُفعّل):', data);
+    showToast('⚠️ تنبيه: لم يتم ربط مكان تخزين بعد — البيانات لم تُحفظ فعلياً', 4000, true);
+    setTimeout(showSuccessScreen, 600);
+    return;
+  }
+
+  showToast('⏳ جاري رفع البيانات، يرجى الانتظار...', 10000);
+
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  })
+  .then(function() { showSuccessScreen(); })
+  .catch(function() { showSuccessScreen(); });
+}
+
+function showSuccessScreen() {
+  document.getElementById('success-screen').classList.add('visible');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function resetForm() {
+  document.getElementById('success-screen').classList.remove('visible');
+  document.getElementById('main-form').style.display = 'none';
+  document.getElementById('id-check-screen').style.display = '';
+  document.getElementById('duplicate-screen').classList.remove('visible');
+  document.getElementById('orphanIdCheck').value = '';
+  document.getElementById('checkResult').className = 'check-result';
+  var btn2 = document.getElementById('checkBtn');
+  if (btn2) { btn2.disabled = false; }
+  document.getElementById('checkBtnIcon').textContent = '🔍';
+  document.getElementById('checkBtnText').textContent = 'تحقق';
+  checkedOrphanId = '';
+
+  var inputs = document.querySelectorAll('#main-form input:not([type=radio]):not([type=file]), #main-form select, #main-form textarea');
+  inputs.forEach(function(el) { el.value = ''; el.classList.remove('input-error'); });
+
+  var citySelect = document.getElementById('citySelect');
+  if (citySelect) { citySelect.innerHTML = '<option value="">اختر المحافظة أولاً</option>'; citySelect.disabled = true; }
+
+  document.querySelectorAll('input[name=isMotherMartyr]').forEach(function(r) { r.checked = false; });
+  document.querySelectorAll('input[name=hasDisability]').forEach(function(r) { r.checked = false; });
+
+  document.getElementById('motherDeathDateField').style.display = 'none';
+  document.getElementById('disabilityTypeField').style.display = 'none';
+
+  fileData = { guardianshipDeed: null, birthCert: null, deathCert: null, guardianId_img: null };
+  ['uw1','uw2','uw3','uw4'].forEach(function(id) {
+    var wrap = document.getElementById(id);
+    if (wrap) wrap.classList.remove('has-file');
+  });
+  ['fn1','fn2','fn3','fn4'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) { el.style.display = 'none'; el.textContent = ''; }
+  });
+
+  var btn = document.getElementById('submitBtn');
+  if (btn) { btn.disabled = false; btn.textContent = 'إرسال الاستمارة'; }
+
+  document.querySelectorAll('.field-error-msg').forEach(function(el) { el.classList.remove('visible'); });
+  var fill = document.getElementById('progressFill');
+  if (fill) fill.style.width = '0%';
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ===== بيانات المناطق =====
+var areasData = {
+  'شمال غزة': ['بيت حانون','بيت لاهيا','جباليا','جباليا البلد','جباليا مخيم','أم النصر','عزبة بيت حانون','الشيخ زايد','النزلة الشرقية','النزلة الغربية'],
+  'غزة': ['الشجاعية','التفاح','الزيتون','الدرج','الرمال','النصر','الشيخ رضوان','البريج','الصبرة','تل الهوى','الجلاء','شارع الوحدة','حي الأمين','النزلة','البلد','الشمال','حي الشيخ عجلين','أبو خضرة','البلدة القديمة'],
+  'الوسطى': ['دير البلح','النصيرات','البريج','المغازي','الزوايدة','المنطقة الوسطى','وادي السلقا','خزاعة','قيزان النجار','قيزان أبو رشوان','المحطة','المنارة'],
+  'خانيونس': ['خانيونس البلد','بني سهيلا','عبسان الكبيرة','عبسان الصغيرة','خزاعة','القرارة','كلاخ','المواصي','الشوكة','قرارة','عامر','حي الأمل','الأمل','غرب خانيونس','شرق خانيونس','الشعبية'],
+  'رفح': ['رفح البلد','تل السلطان','الجنينة','الشابورة','البرازيل','حي السلام','حي الجنينة','حي الشوكة','يبنا','حي النجمة','حي كندا','حي اليبنا','غرب رفح','شرق رفح']
+};
+
+function updateCities() {
+  var gov = document.getElementById('governorateSelect').value;
+  var citySelect = document.getElementById('citySelect');
+  citySelect.innerHTML = '';
+  if (!gov) {
+    citySelect.innerHTML = '<option value="">اختر المحافظة أولاً</option>';
+    citySelect.disabled = true;
+    updateProgress(); return;
+  }
+  var areas = areasData[gov] || [];
+  var defaultOpt = document.createElement('option');
+  defaultOpt.value = ''; defaultOpt.textContent = 'اختر المدينة';
+  citySelect.appendChild(defaultOpt);
+  areas.forEach(function(area) {
+    var opt = document.createElement('option');
+    opt.value = area; opt.textContent = area;
+    citySelect.appendChild(opt);
+  });
+  citySelect.disabled = false;
+  citySelect.value = '';
+  updateProgress();
+}
+
+// منع إدخال أي شيء غير رقمي في حقل التحقق
+document.getElementById('orphanIdCheck').addEventListener('keypress', function(e) {
+  if (!/[0-9]/.test(e.key)) e.preventDefault();
+});
+document.getElementById('orphanIdCheck').addEventListener('input', function() {
+  this.value = this.value.replace(/\D/g, '').slice(0, 9);
+});
+</script>
+</body>
+</html>
